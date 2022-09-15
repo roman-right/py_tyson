@@ -1,6 +1,6 @@
 use pest::iterators::Pair;
 use pest::Parser;
-use crate::document::Document;
+use crate::journal::Journal;
 
 use crate::errors::TySONError;
 use crate::item::{Item, ItemStruct};
@@ -85,19 +85,19 @@ pub trait Desereilize {
     }
 
 
-    fn deserialize(data: String) -> Result<Document, TySONError> {
-        let pair = TySONParser::parse(Rule::document, data.as_str())?.next().ok_or(TySONError::unexpected_parsing())?;
+    fn deserialize(data: String) -> Result<Journal, TySONError> {
+        let pair = TySONParser::parse(Rule::journal, data.as_str())?.next().ok_or(TySONError::unexpected_parsing())?;
 
-        let mut result = Self::new_document();
+        let mut result = Self::new();
 
         match pair.as_rule() {
-            Rule::document => {
+            Rule::journal => {
                 for pair in pair.into_inner() {
                     let mut inner_rules = pair.into_inner();
                     match inner_rules.next() {
                         Some(v) => {
                             let key = result.deserialize_primitive(v);
-                            result.add_to_document((key, result.route_deserialization(inner_rules.next().ok_or(TySONError::unexpected_parsing())?)?));
+                            result.push((key, result.route_deserialization(inner_rules.next().ok_or(TySONError::unexpected_parsing())?)?));
                         }
                         _ => {}
                     }
@@ -108,9 +108,9 @@ pub trait Desereilize {
         }
     }
 
-    fn new_document() -> Document;
+    fn new() -> Journal;
 
-    fn add_to_document(&mut self, data: (PrimitiveItem, ItemStruct));
+    fn push(&mut self, data: (PrimitiveItem, ItemStruct));
 
     fn new_modifier(prefix: String, data: ItemStruct) -> ModifierItem {
         ModifierItem::new(prefix, data)

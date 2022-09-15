@@ -1,6 +1,6 @@
 [package]
 name = "tyson"
-version = "0.1.1"
+version = "0.1.5"
 authors = ["Roman Right <roman-right@protonmail.com>"]
 edition = "2021"
 description = "Typed Simple Object Notation"
@@ -10,7 +10,6 @@ exclude = [
     "assets/*",
 ]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 name = "tyson"
 crate-type = ["cdylib"]

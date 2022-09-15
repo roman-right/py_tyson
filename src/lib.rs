@@ -4,7 +4,7 @@ pub mod errors;
 mod map;
 mod item;
 mod vector;
-mod document;
+mod journal;
 mod modifier;
 
 extern crate pest;
@@ -13,21 +13,21 @@ extern crate pest_derive;
 
 use pyo3::prelude::*;
 use crate::de::Desereilize;
-use crate::document::Document;
+use crate::journal::Journal;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn deserialize(data: String) -> PyResult<Py<Document>> {
+fn deserialize(data: String) -> PyResult<Py<Journal>> {
     let gil = Python::acquire_gil();
     let py = gil.python();
-    let doc = Document::deserialize(data)?;
+    let doc = Journal::deserialize(data)?;
     Py::new(py, doc)
 }
 
 /// A Python module implemented in Rust.
 #[pymodule]
 fn tyson(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_class::<Document>()?;
+    m.add_class::<Journal>()?;
     m.add_function(wrap_pyfunction!(deserialize, m)?)?;
     Ok(())
 }
@@ -35,7 +35,7 @@ fn tyson(_py: Python, m: &PyModule) -> PyResult<()> {
 #[cfg(test)]
 mod tests {
     use crate::de::Desereilize;
-    use crate::document::Document;
+    use crate::journal::Journal;
 
     #[test]
     fn de_se() {
@@ -46,7 +46,7 @@ mod tests {
         l|123|: [d|1|, e|2|],
         "#;
 
-        let doc = Document::deserialize(data.to_string()).unwrap();
+        let doc = Journal::deserialize(data.to_string()).unwrap();
         print!("{:?}", doc);
     }
 }

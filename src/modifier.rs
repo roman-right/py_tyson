@@ -17,3 +17,10 @@ impl ModifierItem {
         }
     }
 }
+
+#[pymethods]
+impl ModifierItem {
+    pub fn get_value(&self) -> ItemStruct {
+        self.value.as_ref().clone()
+    }
+}

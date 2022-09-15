@@ -7,7 +7,7 @@ pub struct VectorItem {
     #[pyo3(get)]
     prefix: String,
     #[pyo3(get)]
-    items: Vec<ItemStruct>,
+    value: Vec<ItemStruct>,
 }
 
 
@@ -15,11 +15,11 @@ impl VectorItem {
     pub fn new(prefix: String) -> Self {
         Self {
             prefix,
-            items: vec![],
+            value: vec![],
         }
     }
 
     pub fn push(&mut self, item: ItemStruct) {
-        self.items.push(item);
+        self.value.push(item);
     }
 }
